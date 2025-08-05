@@ -1,5 +1,7 @@
 using Microservices.Services.AuthAPI.Data;
 using Microservices.Services.AuthAPI.Models;
+using Microservices.Services.AuthAPI.Services.IServices;
+using Microservices.Services.AuthAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +16,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 // añadir los servicios que se vayan creando 
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 builder.Services.AddControllers();
 
