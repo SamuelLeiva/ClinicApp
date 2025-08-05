@@ -3,9 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35919.96 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GateWay", "GateWay", "{1AB095F8-B20F-4628-BD80-0E1A4DB4BF5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integrations", "{6E27875D-AC1F-41EB-B1AE-00F8A61CE379}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{49701D9E-97DE-49BC-8741-A3201F170FA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Services.AuthAPI", "Microservices.Services.AuthAPI\Microservices.Services.AuthAPI.csproj", "{0A05A5DB-D120-4C56-9258-209B893526FC}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A05A5DB-D120-4C56-9258-209B893526FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A05A5DB-D120-4C56-9258-209B893526FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A05A5DB-D120-4C56-9258-209B893526FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A05A5DB-D120-4C56-9258-209B893526FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0A05A5DB-D120-4C56-9258-209B893526FC} = {49701D9E-97DE-49BC-8741-A3201F170FA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC5BB2CB-D74B-44CC-9937-FF44A101F0F5}
