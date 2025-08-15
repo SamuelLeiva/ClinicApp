@@ -15,6 +15,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Services.Auth
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Web", "Microservices.Web\Microservices.Web.csproj", "{E0E54582-3064-454B-8BCB-E6A22613D793}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Services.PatientAPI", "Microservices.Services.PatientAPI\Microservices.Services.PatientAPI.csproj", "{4DABE944-C5CE-4FD3-92CC-188E68802DFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Services.DoctorAPI", "Microservices.Services.DoctorAPI\Microservices.Services.DoctorAPI.csproj", "{4DB9AF47-6549-49AF-B4F5-E9A7DE920460}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Services.AppointmentAPI", "Microservices.Services.AppointmentAPI\Microservices.Services.AppointmentAPI.csproj", "{767A1A35-7A69-40C0-9681-91D4E3F36D6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Services.BillingAPI", "Microservices.Services.BillingAPI\Microservices.Services.BillingAPI.csproj", "{F9C3426F-502E-40C3-8340-1DCBDD9E8EB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +37,22 @@ Global
 		{E0E54582-3064-454B-8BCB-E6A22613D793}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0E54582-3064-454B-8BCB-E6A22613D793}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0E54582-3064-454B-8BCB-E6A22613D793}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DABE944-C5CE-4FD3-92CC-188E68802DFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DABE944-C5CE-4FD3-92CC-188E68802DFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DABE944-C5CE-4FD3-92CC-188E68802DFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DABE944-C5CE-4FD3-92CC-188E68802DFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB9AF47-6549-49AF-B4F5-E9A7DE920460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB9AF47-6549-49AF-B4F5-E9A7DE920460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB9AF47-6549-49AF-B4F5-E9A7DE920460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB9AF47-6549-49AF-B4F5-E9A7DE920460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{767A1A35-7A69-40C0-9681-91D4E3F36D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{767A1A35-7A69-40C0-9681-91D4E3F36D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{767A1A35-7A69-40C0-9681-91D4E3F36D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{767A1A35-7A69-40C0-9681-91D4E3F36D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9C3426F-502E-40C3-8340-1DCBDD9E8EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C3426F-502E-40C3-8340-1DCBDD9E8EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9C3426F-502E-40C3-8340-1DCBDD9E8EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9C3426F-502E-40C3-8340-1DCBDD9E8EB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +60,10 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0A05A5DB-D120-4C56-9258-209B893526FC} = {49701D9E-97DE-49BC-8741-A3201F170FA6}
 		{E0E54582-3064-454B-8BCB-E6A22613D793} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{4DABE944-C5CE-4FD3-92CC-188E68802DFE} = {49701D9E-97DE-49BC-8741-A3201F170FA6}
+		{4DB9AF47-6549-49AF-B4F5-E9A7DE920460} = {49701D9E-97DE-49BC-8741-A3201F170FA6}
+		{767A1A35-7A69-40C0-9681-91D4E3F36D6C} = {49701D9E-97DE-49BC-8741-A3201F170FA6}
+		{F9C3426F-502E-40C3-8340-1DCBDD9E8EB7} = {49701D9E-97DE-49BC-8741-A3201F170FA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC5BB2CB-D74B-44CC-9937-FF44A101F0F5}
