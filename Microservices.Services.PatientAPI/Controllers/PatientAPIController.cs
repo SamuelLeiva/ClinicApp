@@ -3,9 +3,7 @@ using Microservices.Services.PatientAPI.Data;
 using Microservices.Services.PatientAPI.Models;
 using Microservices.Services.PatientAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Azure.Core.HttpHeader;
 
 namespace Microservices.Services.PatientAPI.Controllers
 {
@@ -81,32 +79,38 @@ namespace Microservices.Services.PatientAPI.Controllers
         {
             try
             {
-                if (patientDto != null)
-                {
-                    var newPatient = new Patient()
-                    {
-                        Name = patientDto.Name,
-                        LastName = patientDto.LastName,
-                        DateOfBirth = patientDto.DateOfBirth,
-                        PhoneNumber = patientDto.PhoneNumber,
-                        Email = patientDto.Email
-                    };
-                    _dbContext.Patients.Add(newPatient);
-                    _dbContext.SaveChanges();
-
-                    _response.Result = newPatient.PatientId;
-                    _response.Message = $"Patient {patientDto.PatientId} created successfully.";
-                }
-                else
+                if (patientDto == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Patient data is null or invalid.";
+                    _response.Message = "Invalid patient data.";
+                    return _response;
                 }
+
+                if (_dbContext.Patients.Any(p => p.Email == patientDto.Email))
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "El correo electrónico ya está registrado.";
+                    return _response;
+                }
+
+                if (_dbContext.Patients.Any(p => p.PhoneNumber == patientDto.PhoneNumber))
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "El número de teléfono ya está registrado.";
+                    return _response;
+                }
+
+                Patient newPatient = _mapper.Map<Patient>(patientDto);
+                _dbContext.Patients.Add(newPatient);
+                _dbContext.SaveChanges();
+
+                _response.Result = newPatient.PatientId;
+                _response.Message = "Paciente creado exitosamente.";
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = $"Error ocurred while creating the patient: {ex.Message}";
+                _response.Message = $"Error al crear el paciente: {ex.Message}";
             }
             return _response;
         }
@@ -117,38 +121,48 @@ namespace Microservices.Services.PatientAPI.Controllers
         {
             try
             {
-                if (patientDto != null && patientDto.PatientId > 0)
-                {
-                    Patient? existingPatient = _dbContext.Patients.FirstOrDefault(p => p.PatientId == patientDto.PatientId);
-                    if (existingPatient != null)
-                    {
-                        existingPatient.Name = patientDto.Name;
-                        existingPatient.LastName = patientDto.LastName;
-                        existingPatient.DateOfBirth = patientDto.DateOfBirth;
-                        existingPatient.PhoneNumber = patientDto.PhoneNumber;
-                        existingPatient.Email = patientDto.Email;
-                    }
-                    else
-                    {
-                        _response.IsSuccess = false;
-                        _response.Message = "Patient not found.";
-                        return _response;
-                    }
-
-                    _dbContext.SaveChanges();
-                    _response.Result = _mapper.Map<PatientDto>(existingPatient);
-                    _response.Message = $"Patient {patientDto.PatientId} updated successfully.";
-                }
-                else
+                if (patientDto == null || patientDto.PatientId <= 0)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Invalid patient data.";
+                    _response.Message = "Datos de paciente inválidos para la actualización.";
+                    return _response;
                 }
+
+                // Validación de unicidad para la actualización
+                var existingEmail = _dbContext.Patients.FirstOrDefault(p => p.Email == patientDto.Email && p.PatientId != patientDto.PatientId);
+                if (existingEmail != null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "El correo electrónico ya está registrado por otro paciente.";
+                    return _response;
+                }
+
+                var existingPhone = _dbContext.Patients.FirstOrDefault(p => p.PhoneNumber == patientDto.PhoneNumber && p.PatientId != patientDto.PatientId);
+                if (existingPhone != null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "El número de teléfono ya está registrado por otro paciente.";
+                    return _response;
+                }
+
+                Patient? existingPatient = _dbContext.Patients.FirstOrDefault(p => p.PatientId == patientDto.PatientId);
+                if (existingPatient == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Paciente no encontrado.";
+                    return _response;
+                }
+
+                _mapper.Map(patientDto, existingPatient);
+                _dbContext.SaveChanges();
+
+                _response.Result = _mapper.Map<PatientDto>(existingPatient);
+                _response.Message = $"Paciente {patientDto.PatientId} actualizado exitosamente.";
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = $"Error ocurred while updating the patient {patientDto.Name} {patientDto.LastName}: {ex.Message}";
+                _response.Message = $"Error al actualizar el paciente: {ex.Message}";
             }
             return _response;
         }
