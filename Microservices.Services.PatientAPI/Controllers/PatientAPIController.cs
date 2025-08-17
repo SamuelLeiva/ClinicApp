@@ -89,14 +89,14 @@ namespace Microservices.Services.PatientAPI.Controllers
                 if (_dbContext.Patients.Any(p => p.Email == patientDto.Email))
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "El correo electrónico ya está registrado.";
+                    _response.Message = "Email already registered.";
                     return _response;
                 }
 
                 if (_dbContext.Patients.Any(p => p.PhoneNumber == patientDto.PhoneNumber))
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "El número de teléfono ya está registrado.";
+                    _response.Message = "Phone number already registered.";
                     return _response;
                 }
 
@@ -105,12 +105,12 @@ namespace Microservices.Services.PatientAPI.Controllers
                 _dbContext.SaveChanges();
 
                 _response.Result = newPatient.PatientId;
-                _response.Message = "Paciente creado exitosamente.";
+                _response.Message = $"Patient {newPatient.PatientId} created successfully.";
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = $"Error al crear el paciente: {ex.Message}";
+                _response.Message = $"Error while creating the patient: {ex.Message}";
             }
             return _response;
         }
@@ -124,7 +124,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                 if (patientDto == null || patientDto.PatientId <= 0)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Datos de paciente inválidos para la actualización.";
+                    _response.Message = "Invalid patient data.";
                     return _response;
                 }
 
@@ -133,7 +133,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                 if (existingEmail != null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "El correo electrónico ya está registrado por otro paciente.";
+                    _response.Message = "Email already registered.";
                     return _response;
                 }
 
@@ -141,7 +141,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                 if (existingPhone != null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "El número de teléfono ya está registrado por otro paciente.";
+                    _response.Message = "Phone number already registered.";
                     return _response;
                 }
 
@@ -149,7 +149,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                 if (existingPatient == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Paciente no encontrado.";
+                    _response.Message = "Patient not found.";
                     return _response;
                 }
 
@@ -157,12 +157,12 @@ namespace Microservices.Services.PatientAPI.Controllers
                 _dbContext.SaveChanges();
 
                 _response.Result = _mapper.Map<PatientDto>(existingPatient);
-                _response.Message = $"Paciente {patientDto.PatientId} actualizado exitosamente.";
+                _response.Message = $"Patient {existingPatient.PatientId} updated successfully.";
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = $"Error al actualizar el paciente: {ex.Message}";
+                _response.Message = $"Error while updating the patient: {ex.Message}";
             }
             return _response;
         }
