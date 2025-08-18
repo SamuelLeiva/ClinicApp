@@ -75,7 +75,7 @@ namespace Microservices.Services.PatientAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ResponseDto Post([FromBody] PatientDto patientDto)
+        public ResponseDto Post([FromBody] CreatePatientDto patientDto)
         {
             try
             {
@@ -116,12 +116,13 @@ namespace Microservices.Services.PatientAPI.Controllers
         }
 
         [HttpPut]
+        [Route("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public ResponseDto Put([FromBody] PatientDto patientDto)
+        public ResponseDto Put(int id, [FromBody] UpdatePatientDto patientDto)
         {
             try
             {
-                if (patientDto == null || patientDto.PatientId <= 0)
+                if (patientDto == null || id <= 0)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid patient data.";
@@ -129,7 +130,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                 }
 
                 // Validación de unicidad para la actualización
-                var existingEmail = _dbContext.Patients.FirstOrDefault(p => p.Email == patientDto.Email && p.PatientId != patientDto.PatientId);
+                var existingEmail = _dbContext.Patients.FirstOrDefault(p => p.Email == patientDto.Email && p.PatientId != id);
                 if (existingEmail != null)
                 {
                     _response.IsSuccess = false;
@@ -137,7 +138,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                     return _response;
                 }
 
-                var existingPhone = _dbContext.Patients.FirstOrDefault(p => p.PhoneNumber == patientDto.PhoneNumber && p.PatientId != patientDto.PatientId);
+                var existingPhone = _dbContext.Patients.FirstOrDefault(p => p.PhoneNumber == patientDto.PhoneNumber && p.PatientId != id);
                 if (existingPhone != null)
                 {
                     _response.IsSuccess = false;
@@ -145,7 +146,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                     return _response;
                 }
 
-                Patient? existingPatient = _dbContext.Patients.FirstOrDefault(p => p.PatientId == patientDto.PatientId);
+                Patient? existingPatient = _dbContext.Patients.FirstOrDefault(p => p.PatientId == id);
                 if (existingPatient == null)
                 {
                     _response.IsSuccess = false;
@@ -156,7 +157,7 @@ namespace Microservices.Services.PatientAPI.Controllers
                 _mapper.Map(patientDto, existingPatient);
                 _dbContext.SaveChanges();
 
-                _response.Result = _mapper.Map<PatientDto>(existingPatient);
+                _response.Result = _mapper.Map<UpdatePatientDto>(existingPatient);
                 _response.Message = $"Patient {existingPatient.PatientId} updated successfully.";
             }
             catch (Exception ex)

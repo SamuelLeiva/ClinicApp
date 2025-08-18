@@ -1,37 +1,73 @@
 {
-    "Routes": [
-        // Rutas para el Microservicio de Autenticación (AuthAPI)
+  "Routes": [
+    // Rutas para el Microservicio de Autenticación (AuthAPI)
+    {
+      "DownstreamPathTemplate": "/api/authapi/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
         {
-            "DownstreamPathTemplate": "/api/authapi/{everything}",
-            "DownstreamScheme": "https",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "localhost",
-                    "Port": 7002
-                }
-            ],
-            "UpstreamPathTemplate": "/api/AuthAPI/{everything}",
-            "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
-        },
-        // Rutas para el Microservicio de Pacientes (PatientAPI)
-        {
-            "DownstreamPathTemplate": "/api/patientapi/{everything}",
-            "DownstreamScheme": "https",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "localhost",
-                    "Port": 7000
-                }
-            ],
-            "UpstreamPathTemplate": "/api/gateway/PatientAPI/{everything}",
-            "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
-            "SwaggerKey": "PatientAPI",
-            "AuthenticationOptions": {
-                "AuthenticationProviderKey": "Bearer",
-                "AllowedScopes": []
-            }
+          "Host": "localhost",
+          "Port": 7002
         }
-    ],
+      ],
+      "UpstreamPathTemplate": "/api/AuthAPI/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    // Rutas para el Microservicio de Pacientes (PatientAPI)
+    {
+      "DownstreamPathTemplate": "/api/patientapi/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7000
+        }
+      ],
+      "UpstreamPathTemplate": "/api/gateway/PatientAPI/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "SwaggerKey": "PatientAPI",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    // Rutas para el Microservicio de Doctores (Doctors)
+    {
+      "DownstreamPathTemplate": "/api/doctorapi/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/gateway/DoctorAPI/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "SwaggerKey": "DoctorAPI",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    // Rutas para el Microservicio de Doctores (Specialties)
+    {
+      "DownstreamPathTemplate": "/api/specialtyapi/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "UpstreamPathTemplate": "/api/gateway/SpecialtyAPI/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "SwaggerKey": "DoctorAPI",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    }
+  ],
     "GlobalConfiguration": {
         "BaseUrl": "https://localhost:5000"
     }
