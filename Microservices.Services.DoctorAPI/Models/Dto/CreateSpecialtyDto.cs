@@ -1,8 +1,7 @@
 ﻿namespace Microservices.Services.DoctorAPI.Models.Dto
 {
-    public class SpecialtyDto
+    public class CreateSpecialtyDto
     {
-        public int SpecialtyId { get; set; }
         public string Name { get; set; }
     }
 }

@@ -76,23 +76,30 @@ namespace Microservices.Services.DoctorAPI.Controllers
         }
 
         [HttpPost]
-        public ResponseDto Create([FromBody] SpecialtyDto specialtyDto)
+        public ResponseDto Create([FromBody] CreateSpecialtyDto specialtyDto)
         {
             try
             {
-                if (specialtyDto == null || string.IsNullOrEmpty(specialtyDto.Name))
+                if (specialtyDto == null)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid specialty data.";
+                    return _response;
                 }
-                else
+
+                if (_dbContext.Specialties.Any(s => s.Name == specialtyDto.Name))
                 {
-                    var specialty = _mapper.Map<Specialty>(specialtyDto);
-                    _dbContext.Specialties.Add(specialty);
-                    _dbContext.SaveChanges();
-                    _response.Result = _mapper.Map<SpecialtyDto>(specialty);
-                    _response.Message = "Specialty created successfully.";
+                    _response.IsSuccess = false;
+                    _response.Message = "Specialty already registered.";
+                    return _response;
                 }
+
+                Specialty newSpecialty = _mapper.Map<Specialty>(specialtyDto);
+                _dbContext.Specialties.Add(newSpecialty);
+                _dbContext.SaveChanges();
+                
+                _response.Result = newSpecialty.SpecialtyId;
+                _response.Message = $"Specialty created successfully.";
             }
             catch (Exception ex)
             {
@@ -104,31 +111,39 @@ namespace Microservices.Services.DoctorAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public ResponseDto Update(int id, [FromBody] SpecialtyDto specialtyDto)
+        public ResponseDto Update(int id, [FromBody] UpdateSpecialtyDto specialtyDto)
         {
             try
             {
-                if (id <= 0 || specialtyDto == null || string.IsNullOrEmpty(specialtyDto.Name))
+                if (id <= 0 || specialtyDto == null)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid specialty data.";
+                    return _response;
                 }
-                else
+
+                var existingName = _dbContext.Specialties.FirstOrDefault(s => s.Name == specialtyDto.Name && s.SpecialtyId != id);
+                if (existingName != null)
                 {
-                    var specialty = _dbContext.Specialties.FirstOrDefault(s => s.SpecialtyId == id);
-                    if (specialty != null)
-                    {
-                        specialty.Name = specialtyDto.Name;
-                        _dbContext.SaveChanges();
-                        _response.Result = _mapper.Map<SpecialtyDto>(specialty);
-                        _response.Message = "Specialty updated successfully.";
-                    }
-                    else
-                    {
-                        _response.IsSuccess = false;
-                        _response.Message = "Specialty not found.";
-                    }
+                    _response.IsSuccess = false;
+                    _response.Message = "Specialty already registered.";
+                    return _response;
                 }
+
+                Specialty? existingSpecialty = _dbContext.Specialties.FirstOrDefault(s => s.SpecialtyId == id);
+                if (existingSpecialty == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Specialty not found.";
+                    return _response;
+                }
+
+                _mapper.Map(specialtyDto, existingSpecialty);
+                _dbContext.SaveChanges();
+
+                _response.Result = _mapper.Map<UpdateSpecialtyDto>(existingSpecialty);
+                _response.Message = $"Specialty {existingSpecialty.SpecialtyId} updated successfully.";
+
             }
             catch (Exception ex)
             {

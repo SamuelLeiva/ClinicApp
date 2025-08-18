@@ -77,7 +77,7 @@ namespace Microservices.Services.DoctorAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ResponseDto Post([FromBody] DoctorDto doctorDto)
+        public ResponseDto Post([FromBody] CreateDoctorDto doctorDto)
         {
             try
             {
@@ -119,11 +119,12 @@ namespace Microservices.Services.DoctorAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        public ResponseDto Put([FromBody] DoctorDto doctorDto)
+        [Route("{id:int}")]
+        public ResponseDto Put(int id, [FromBody] UpdateDoctorDto doctorDto)
         {
             try
             {
-                if (doctorDto == null || doctorDto.DoctorId <= 0)
+                if (doctorDto == null || id <= 0)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid doctor data.";
@@ -131,7 +132,7 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 }
 
                 // Validación de unicidad para la actualización
-                var existingEmail = _dbContext.Doctors.FirstOrDefault(d => d.Email == doctorDto.Email && d.DoctorId != doctorDto.DoctorId);
+                var existingEmail = _dbContext.Doctors.FirstOrDefault(d => d.Email == doctorDto.Email && d.DoctorId != id);
                 if (existingEmail != null)
                 {
                     _response.IsSuccess = false;
@@ -139,7 +140,7 @@ namespace Microservices.Services.DoctorAPI.Controllers
                     return _response;
                 }
 
-                var existingPhone = _dbContext.Doctors.FirstOrDefault(d => d.PhoneNumber == doctorDto.PhoneNumber && d.DoctorId != doctorDto.DoctorId);
+                var existingPhone = _dbContext.Doctors.FirstOrDefault(d => d.PhoneNumber == doctorDto.PhoneNumber && d.DoctorId != id);
                 if (existingPhone != null)
                 {
                     _response.IsSuccess = false;
@@ -147,7 +148,7 @@ namespace Microservices.Services.DoctorAPI.Controllers
                     return _response;
                 }
 
-                Doctor? existingDoctor = _dbContext.Doctors.FirstOrDefault(d => d.DoctorId == doctorDto.DoctorId);
+                Doctor? existingDoctor = _dbContext.Doctors.FirstOrDefault(d => d.DoctorId == id);
                 if (existingDoctor == null)
                 {
                     _response.IsSuccess = false;
@@ -158,7 +159,7 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 _mapper.Map(doctorDto, existingDoctor);
                 _dbContext.SaveChanges();
 
-                _response.Result = _mapper.Map<DoctorDto>(existingDoctor);
+                _response.Result = _mapper.Map<UpdateDoctorDto>(existingDoctor);
                 _response.Message = $"Doctor {existingDoctor.DoctorId} updated successfully.";
             }
             catch (Exception ex)
