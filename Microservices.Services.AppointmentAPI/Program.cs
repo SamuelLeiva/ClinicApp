@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microservices.Services.AppointmentAPI;
 using Microservices.Services.AppointmentAPI.Data;
 using Microservices.Services.AppointmentAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,6 +13,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddHttpClient("PatientAPI", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7000");
+});
+
+builder.Services.AddHttpClient("DoctorAPI", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7003");
+});
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -45,8 +58,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 //AutoMapper
-//IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
-//builder.Services.AddSingleton(mapper);
+IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.AddAppAuthentication();

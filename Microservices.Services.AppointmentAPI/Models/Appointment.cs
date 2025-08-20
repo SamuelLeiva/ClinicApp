@@ -1,11 +1,13 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Microservices.Services.AppointmentAPI.Models
 {
     public class Appointment
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AppointmentId { get; set; }
 
         [Required(ErrorMessage ="PatientId is required")]
@@ -18,6 +20,6 @@ namespace Microservices.Services.AppointmentAPI.Models
         public DateTime AppointmentDate { get; set; }
 
         [MaxLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
-        public StringDictionary Description { get; set; }
+        public string Description { get; set; }
     }
 }

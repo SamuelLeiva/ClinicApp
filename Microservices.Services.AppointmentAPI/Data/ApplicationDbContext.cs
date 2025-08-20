@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Microservices.Services.AppointmentAPI.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext: DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

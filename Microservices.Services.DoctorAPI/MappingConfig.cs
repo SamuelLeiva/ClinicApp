@@ -1,13 +1,14 @@
-﻿using Microservices.Services.DoctorAPI.Models;
+﻿using AutoMapper;
+using Microservices.Services.DoctorAPI.Models;
 using Microservices.Services.DoctorAPI.Models.Dto;
 
 namespace Microservices.Services.DoctorAPI
 {
     public class MappingConfig
     {
-        public static AutoMapper.MapperConfiguration RegisterMaps()
+        public static MapperConfiguration RegisterMaps()
         {
-            var mappingConfig = new AutoMapper.MapperConfiguration(config =>
+            var mappingConfig = new MapperConfiguration(config =>
             {
                 config.CreateMap<Doctor, DoctorDto>().ReverseMap();
                 config.CreateMap<Doctor, CreateDoctorDto>().ReverseMap();
