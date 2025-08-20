@@ -4,6 +4,8 @@ using Microservices.Services.DoctorAPI.Models;
 using Microservices.Services.DoctorAPI.Models.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Microservices.Services.DoctorAPI.Controllers
 {
@@ -11,7 +13,6 @@ namespace Microservices.Services.DoctorAPI.Controllers
     [ApiController]
     public class SpecialtyAPIController : ControllerBase
     {
-        // API similar a la de DoctorAPIController, pero para Specialty
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
         private ResponseDto _response;
@@ -24,25 +25,28 @@ namespace Microservices.Services.DoctorAPI.Controllers
         }
 
         [HttpGet]
-        public ResponseDto Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                var specialtyList = _dbContext.Specialties.ToList();
+                IEnumerable<Specialty> specialtyList = await _dbContext.Specialties.ToListAsync();
+
                 _response.Result = _mapper.Map<List<SpecialtyDto>>(specialtyList);
                 _response.Message = "Specialties retrieved successfully.";
+
+                return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error occurred while retrieving the specialties: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public ResponseDto Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
@@ -50,33 +54,32 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid specialty ID.";
+                    return BadRequest(_response);
                 }
-                else
+
+                Specialty? specialty = await _dbContext.Specialties.FirstOrDefaultAsync(s => s.SpecialtyId == id);
+                if (specialty == null)
                 {
-                    var specialty = _dbContext.Specialties.FirstOrDefault(s => s.SpecialtyId == id);
-                    if (specialty != null)
-                    {
-                        _response.Result = _mapper.Map<SpecialtyDto>(specialty);
-                        _response.Message = "Specialty retrieved successfully.";
-                    }
-                    else
-                    {
-                        _response.IsSuccess = false;
-                        _response.Message = "Specialty not found.";
-                    }
+                    _response.IsSuccess = false;
+                    _response.Message = "Specialty not found.";
+                    return NotFound(_response);
                 }
+
+                _response.Result = _mapper.Map<SpecialtyDto>(specialty);
+                _response.Message = "Specialty retrieved successfully.";
+                return Ok(_response);
+
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error occurred while retrieving the specialty: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
-
         }
 
         [HttpPost]
-        public ResponseDto Create([FromBody] CreateSpecialtyDto specialtyDto)
+        public async Task<IActionResult> Post([FromBody] CreateSpecialtyDto specialtyDto)
         {
             try
             {
@@ -84,34 +87,36 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid specialty data.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
-                if (_dbContext.Specialties.Any(s => s.Name == specialtyDto.Name))
+                if (await _dbContext.Specialties.AnyAsync(s => s.Name == specialtyDto.Name))
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Specialty already registered.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
                 Specialty newSpecialty = _mapper.Map<Specialty>(specialtyDto);
-                _dbContext.Specialties.Add(newSpecialty);
-                _dbContext.SaveChanges();
-                
+                await _dbContext.Specialties.AddAsync(newSpecialty);
+                await _dbContext.SaveChangesAsync();
+
                 _response.Result = newSpecialty.SpecialtyId;
                 _response.Message = $"Specialty created successfully.";
+
+                return CreatedAtRoute("Get", new { id = newSpecialty.SpecialtyId }, _response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error occurred while creating the specialty: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public ResponseDto Update(int id, [FromBody] UpdateSpecialtyDto specialtyDto)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateSpecialtyDto specialtyDto)
         {
             try
             {
@@ -119,38 +124,39 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid specialty data.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
-                var existingName = _dbContext.Specialties.FirstOrDefault(s => s.Name == specialtyDto.Name && s.SpecialtyId != id);
+                var existingName = await _dbContext.Specialties.FirstOrDefaultAsync(s => s.Name == specialtyDto.Name && s.SpecialtyId != id);
                 if (existingName != null)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Specialty already registered.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
-                Specialty? existingSpecialty = _dbContext.Specialties.FirstOrDefault(s => s.SpecialtyId == id);
+                Specialty? existingSpecialty = await _dbContext.Specialties.FirstOrDefaultAsync(s => s.SpecialtyId == id);
                 if (existingSpecialty == null)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Specialty not found.";
-                    return _response;
+                    return NotFound(_response);
                 }
 
                 _mapper.Map(specialtyDto, existingSpecialty);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
 
                 _response.Result = _mapper.Map<UpdateSpecialtyDto>(existingSpecialty);
                 _response.Message = $"Specialty {existingSpecialty.SpecialtyId} updated successfully.";
+                return Ok(_response);
 
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error occurred while updating the specialty: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
     }
 }
