@@ -29,6 +29,109 @@ namespace Microservices.Services.AppointmentAPI.Controllers
             _response = new ResponseDto();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAppointments()
+        {
+            try
+            {
+                var appointmentList = await _dbContext.Appointments.ToListAsync();
+
+                var appointmentDtoList = _mapper.Map<List<AppointmentDto>>(appointmentList);
+
+                var response = new ResponseDto
+                {
+                    Result = appointmentDtoList,
+                    IsSuccess = true,
+                    Message = "Appointments retrieved successfully."
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"Error retrieving appointments: {ex.Message}"
+                };
+                return StatusCode(500, response);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id:int}", Name = "GetAppointmentById")]
+        public async Task<IActionResult> GetAppointmentById(int id)
+        {
+            try
+            {
+                var appointment = await _dbContext.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == id);
+                if (appointment == null)
+                {
+
+                    _response.IsSuccess = false;
+                    _response.Message = "Appointment not found.";
+                    
+                    return NotFound(_response);
+                }
+
+                var appointmentDto = _mapper.Map<AppointmentDto>(appointment);
+
+                _response.Result = appointmentDto;
+                _response.IsSuccess = true;
+                _response.Message = "Appointment retrieved successfully.";
+                
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+
+                _response.IsSuccess = false;
+                _response.Message = $"Error retrieving appointment: {ex.Message}";
+                
+                return StatusCode(500, _response);
+            }
+        }
+
+        [HttpGet]
+        [Route("filter")]
+        public async Task<IActionResult> GetAppointmentsByFilter([FromQuery] int? patientId, [FromQuery] int? doctorId)
+        {
+            try
+            {
+                // Que es queryable?
+                IQueryable<Appointment> query = _dbContext.Appointments.AsQueryable();
+
+                if (patientId.HasValue)
+                {
+                    query = query.Where(a => a.PatientId == patientId.Value);
+                }
+
+                if (doctorId.HasValue)
+                {
+                    query = query.Where(a => a.DoctorId == doctorId.Value);
+                }
+
+                var filteredAppointments = await query.ToListAsync();
+                var appointmentDtoList = _mapper.Map<List<AppointmentDto>>(filteredAppointments);
+
+                var response = new ResponseDto
+                {
+                    Result = appointmentDtoList,
+                    IsSuccess = true,
+                    Message = "Appointments retrieved successfully based on filter."
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var response = new ResponseDto
+                {
+                    IsSuccess = false,
+                    Message = $"Error retrieving appointments with filter: {ex.Message}"
+                };
+                return StatusCode(500, response);
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post([FromBody] CreateAppointmentDto appointmentDto)
@@ -63,7 +166,7 @@ namespace Microservices.Services.AppointmentAPI.Controllers
                 _response.Result = _mapper.Map<AppointmentDto>(newAppointment);
                 _response.Message = "Cita creada exitosamente.";
 
-                return CreatedAtRoute("Get", new { id = newAppointment.AppointmentId }, _response);
+                return CreatedAtRoute("GetAppointmentById", new { id = newAppointment.AppointmentId }, _response);
             }
             catch (Exception ex)
             {

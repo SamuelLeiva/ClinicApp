@@ -46,7 +46,7 @@ namespace Microservices.Services.DoctorAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:int}", Name = "GetDoctorById")]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -108,10 +108,10 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 await _dbContext.Doctors.AddAsync(newDoctor);
                 await _dbContext.SaveChangesAsync();
 
-                _response.Result = newDoctor.DoctorId;
-                _response.Message = $"Doctor {newDoctor.DoctorId} created successfully.";
+                _response.Result = _mapper.Map<DoctorDto>(newDoctor);
+                _response.Message = $"Doctor created successfully.";
 
-                return CreatedAtRoute("Get", new { id = newDoctor.DoctorId }, _response);
+                return CreatedAtRoute("GetDoctorById", new { id = newDoctor.DoctorId }, _response);
             }
             catch (Exception ex)
             {
