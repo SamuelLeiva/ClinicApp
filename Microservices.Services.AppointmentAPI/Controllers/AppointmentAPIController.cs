@@ -31,7 +31,7 @@ namespace Microservices.Services.AppointmentAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ResponseDto> Post([FromBody] CreateAppointmentDto appointmentDto)
+        public async Task<IActionResult> Post([FromBody] CreateAppointmentDto appointmentDto)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Microservices.Services.AppointmentAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = "El paciente no existe.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
                 // 2. Validar existencia del Doctor
@@ -52,7 +52,7 @@ namespace Microservices.Services.AppointmentAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = "El médico no existe.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
                 // 3. Crear y guardar la cita
@@ -62,13 +62,15 @@ namespace Microservices.Services.AppointmentAPI.Controllers
 
                 _response.Result = _mapper.Map<AppointmentDto>(newAppointment);
                 _response.Message = "Cita creada exitosamente.";
+
+                return CreatedAtRoute("Get", new { id = newAppointment.AppointmentId }, _response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error al crear la cita: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
     }
 }
