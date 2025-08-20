@@ -6,6 +6,7 @@ using Microservices.Services.DoctorAPI.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Microservices.Services.DoctorAPI.Controllers
 {
@@ -26,58 +27,59 @@ namespace Microservices.Services.DoctorAPI.Controllers
 
         // CRUD Endpoints
         [HttpGet]
-        public ResponseDto Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                IEnumerable<Doctor> doctorList = _dbContext.Doctors.ToList();
+                IEnumerable<Doctor> doctorList = await _dbContext.Doctors.ToListAsync();
                 _response.Result = _mapper.Map<List<DoctorDto>>(doctorList);
                 _response.Message = "Doctors retrieved successfully.";
+
+                return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error ocurred while retrieving the doctors {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public ResponseDto Get(int id) {
+        public async Task<IActionResult> Get(int id)
+        {
             try
             {
                 if (id <= 0)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid doctor ID.";
+                    return BadRequest(_response);
                 }
-                else
+
+                Doctor? doctor = await _dbContext.Doctors.FirstOrDefaultAsync(d => d.DoctorId == id);
+                if (doctor == null)
                 {
-                    Doctor? doctor = _dbContext.Doctors.FirstOrDefault(d => d.DoctorId == id);
-                    if (doctor != null)
-                    {
-                        _response.Result = _mapper.Map<DoctorDto>(doctor);
-                        _response.Message = "Doctor retrieved successfully.";
-                    }
-                    else
-                    {
-                        _response.IsSuccess = false;
-                        _response.Message = "Doctor not found.";
-                    }
+                    _response.IsSuccess = false;
+                    _response.Message = "Doctor not found.";
+                    return NotFound(_response);
                 }
+                _response.Result = _mapper.Map<DoctorDto>(doctor);
+                _response.Message = "Doctor retrieved successfully.";
+                return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error ocurred while retrieving the doctor with id {id}: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ResponseDto Post([FromBody] CreateDoctorDto doctorDto)
+        public async Task<IActionResult> Post([FromBody] CreateDoctorDto doctorDto)
         {
             try
             {
@@ -85,42 +87,44 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid doctor data.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
-                if (_dbContext.Doctors.Any(p => p.Email == doctorDto.Email))
+                if (await _dbContext.Doctors.AnyAsync(p => p.Email == doctorDto.Email))
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Email already registered.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
-                if (_dbContext.Doctors.Any(d => d.PhoneNumber == doctorDto.PhoneNumber))
+                if (await _dbContext.Doctors.AnyAsync(d => d.PhoneNumber == doctorDto.PhoneNumber))
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Phone number already registered.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
                 Doctor newDoctor = _mapper.Map<Doctor>(doctorDto);
-                _dbContext.Doctors.Add(newDoctor);
-                _dbContext.SaveChanges();
+                await _dbContext.Doctors.AddAsync(newDoctor);
+                await _dbContext.SaveChangesAsync();
 
                 _response.Result = newDoctor.DoctorId;
-                _response.Message = "Doctor created successfully.";
+                _response.Message = $"Doctor {newDoctor.DoctorId} created successfully.";
+
+                return CreatedAtRoute("Get", new { id = newDoctor.DoctorId }, _response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error ocurred while creating the doctor: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
         [Route("{id:int}")]
-        public ResponseDto Put(int id, [FromBody] UpdateDoctorDto doctorDto)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateDoctorDto doctorDto)
         {
             try
             {
@@ -128,46 +132,47 @@ namespace Microservices.Services.DoctorAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Invalid doctor data.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
                 // Validación de unicidad para la actualización
-                var existingEmail = _dbContext.Doctors.FirstOrDefault(d => d.Email == doctorDto.Email && d.DoctorId != id);
+                var existingEmail = await _dbContext.Doctors.FirstOrDefaultAsync(d => d.Email == doctorDto.Email && d.DoctorId != id);
                 if (existingEmail != null)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Email already registered.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
-                var existingPhone = _dbContext.Doctors.FirstOrDefault(d => d.PhoneNumber == doctorDto.PhoneNumber && d.DoctorId != id);
+                var existingPhone = await _dbContext.Doctors.FirstOrDefaultAsync(d => d.PhoneNumber == doctorDto.PhoneNumber && d.DoctorId != id);
                 if (existingPhone != null)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Phone number already registered.";
-                    return _response;
+                    return BadRequest(_response);
                 }
 
-                Doctor? existingDoctor = _dbContext.Doctors.FirstOrDefault(d => d.DoctorId == id);
+                Doctor? existingDoctor = await _dbContext.Doctors.FirstOrDefaultAsync(d => d.DoctorId == id);
                 if (existingDoctor == null)
                 {
                     _response.IsSuccess = false;
                     _response.Message = "Doctor not found.";
-                    return _response;
+                    return NotFound(_response);
                 }
 
                 _mapper.Map(doctorDto, existingDoctor);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
 
                 _response.Result = _mapper.Map<UpdateDoctorDto>(existingDoctor);
                 _response.Message = $"Doctor {existingDoctor.DoctorId} updated successfully.";
+                return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = $"Error while updating the doctor: {ex.Message}";
+                return StatusCode(500, _response);
             }
-            return _response;
         }
 
     }
