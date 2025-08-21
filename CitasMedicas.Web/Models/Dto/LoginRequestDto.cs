@@ -1,4 +1,4 @@
-﻿namespace CitasMedicas.Web.Models.DTOs
+﻿namespace CitasMedicas.Web.Models.Dto
 {
     public class LoginRequestDto
     {
