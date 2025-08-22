@@ -2,7 +2,7 @@
 
 namespace CitasMedicas.Web.Services.IServices
 {
-    public interface ISpecialty
+    public interface ISpecialtyService
     {
         Task<ResponseDto> GetSpecialtiesAsync();
         Task<ResponseDto> GetSpecialtyByIdAsync(int specialtyId);

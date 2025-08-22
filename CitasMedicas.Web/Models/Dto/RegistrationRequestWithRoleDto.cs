@@ -1,6 +1,6 @@
 ﻿namespace CitasMedicas.Web.Models.Dto
 {
-    public class RegistrationRequestWithRole
+    public class RegistrationRequestWithRoleDto
     {
         public string Email { get; set; }
         public string Name { get; set; }
