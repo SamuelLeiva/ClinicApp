@@ -69,16 +69,17 @@ namespace CitasMedicas.Web.Controllers
             ResponseDto? responseDto = await _patientService.GetPatientByIdAsync(patientId);
             if (responseDto != null && responseDto.IsSuccess)
             {
-                PatientDto? productDto = JsonConvert.DeserializeObject<PatientDto>(Convert.ToString(responseDto.Result));
-                if (productDto != null)
+                PatientDto? patientDto = JsonConvert.DeserializeObject<PatientDto>(Convert.ToString(responseDto.Result));
+                if (patientDto != null)
                 {
-                    return View(new CreatePatientDto
+                    return View(new UpdatePatientDto
                     {
-                        Name = productDto.Name,
-                        LastName = productDto.LastName,
-                        DateOfBirth = productDto.DateOfBirth,
-                        PhoneNumber = productDto.PhoneNumber,
-                        Email = productDto.Email
+                        PatientId = patientId,
+                        Name = patientDto.Name,
+                        LastName = patientDto.LastName,
+                        DateOfBirth = patientDto.DateOfBirth,
+                        PhoneNumber = patientDto.PhoneNumber,
+                        Email = patientDto.Email
                     });
                 }
                 else
