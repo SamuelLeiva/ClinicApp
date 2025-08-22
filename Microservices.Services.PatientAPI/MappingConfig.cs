@@ -16,6 +16,7 @@ namespace Microservices.Services.PatientAPI
 
                 // Configuración para el mapeo de actualización
                 config.CreateMap<UpdatePatientDto, Patient>()
+                    .ForMember(dest => dest.PatientId, opt => opt.Condition(src => src.PatientId.HasValue))
                     .ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name != null))
                     .ForMember(dest => dest.LastName, opt => opt.Condition(src => src.LastName != null))
                     .ForMember(dest => dest.PhoneNumber, opt => opt.Condition(src => src.PhoneNumber != null))

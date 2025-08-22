@@ -15,6 +15,7 @@ namespace Microservices.Services.DoctorAPI
                 config.CreateMap<Doctor, UpdateDoctorDto>().ReverseMap();
 
                 config.CreateMap<UpdateDoctorDto, Doctor>()
+                    .ForMember(dest => dest.DoctorId, opt => opt.Condition(src => src.DoctorId.HasValue))
                     .ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name != null))
                     .ForMember(dest => dest.LastName, opt => opt.Condition(src => src.LastName != null))
                     .ForMember(dest => dest.PhoneNumber, opt => opt.Condition(src => src.PhoneNumber != null))
@@ -26,6 +27,7 @@ namespace Microservices.Services.DoctorAPI
                 config.CreateMap<Specialty, UpdateSpecialtyDto>().ReverseMap();
 
                 config.CreateMap<UpdateSpecialtyDto, Specialty>()
+                    .ForMember(dest => dest.SpecialtyId, opt => opt.Condition(src => src.SpecialtyId.HasValue))
                     .ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name != null));
             });
             return mappingConfig;
