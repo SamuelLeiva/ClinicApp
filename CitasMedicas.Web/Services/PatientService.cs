@@ -27,7 +27,7 @@ namespace CitasMedicas.Web.Services
             });
         }
 
-        public async Task<ResponseDto> GetAllPatientsAsync()
+        public async Task<ResponseDto> GetPatientsAsync()
         {
             return await _baseService.SendAsync(new RequestDto()
             {
@@ -51,7 +51,7 @@ namespace CitasMedicas.Web.Services
             {
                 ApiType = SD.ApiType.PUT,
                 Data = patientDto,
-                Url = SD.PatientAPIBase + "/api/PatientAPI"
+                Url = SD.PatientAPIBase + $"/api/PatientAPI/{patientDto.PatientId}"
             });
         }   
 

@@ -6,6 +6,7 @@
         public static string AuthAPIBase { get; set; }
         public static string AppointmentAPIBase { get; set; }
         public static string DoctorAPIBase { get; set; }
+        public static string SpecialtyAPIBase { get; set; }
 
         public const string RoleAdmin = "ADMIN";
         public const string RolePatient = "PATIENT";

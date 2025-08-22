@@ -12,12 +12,12 @@ namespace CitasMedicas.Web.Services
             _baseService = baseService;
         }
 
-        public async Task<ResponseDto?> AssignRoleAsync(RegistrationRequestWithRole registrationRequestWithRole)
+        public async Task<ResponseDto?> AssignRoleAsync(RegistrationRequestWithRoleDto registrationRequestWithRoleDto)
         {
             return await _baseService.SendAsync(new RequestDto
             {
                 ApiType = SD.ApiType.POST,
-                Data = registrationRequestWithRole,
+                Data = registrationRequestWithRoleDto,
                 Url = SD.AuthAPIBase + "/api/AuthAPI/AssignRole"
             });
         }
@@ -32,14 +32,15 @@ namespace CitasMedicas.Web.Services
             }, withBearer: false);
         }
 
-        public async Task<ResponseDto?> RegisterAsync(RegistrationRequestWithRole registrationRequestDto)
+        public async Task<ResponseDto?> RegisterAsync(RegistrationRequestWithRoleDto registrationRequestWithRoleDto)
         {
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = SD.ApiType.POST,
-                Data = registrationRequestDto,
+                Data = registrationRequestWithRoleDto,
                 Url = SD.AuthAPIBase + "/api/AuthAPI/Register"
             }, withBearer: false);
         }
+
     }
 }

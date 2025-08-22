@@ -7,6 +7,6 @@ namespace CitasMedicas.Web.Services.IServices
         Task<ResponseDto> GetAppointmentsAsync();
         Task<ResponseDto> GetAppointmentByIdAsync(int appointmentId);
         Task<ResponseDto> GetAppointmentFilter(int patientId, int doctorId);
-        Task<ResponseDto> CreateDoctorAsync(CreateAppointmentDto appointmentDto);
+        Task<ResponseDto> CreateAppointmentAsync(CreateAppointmentDto appointmentDto);
     }
 }
