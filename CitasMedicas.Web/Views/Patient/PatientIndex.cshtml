@@ -1,0 +1,69 @@
+﻿@model List<CitasMedicas.Web.Models.Dto.PatientDto>
+
+@{
+    ViewData["Title"] = "Pacientes";
+}
+
+<h1 class="text-center my-4">Listado de Pacientes</h1>
+
+<div class="container">
+    @if (TempData["success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">Pacientes</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-action="PatientCreate" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Nuevo Paciente</a>
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr class="table-dark">
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model)
+            {
+                <tr>
+                    <td>@patient.Name</td>
+                    <td>@patient.LastName</td>
+                    <td>@patient.DateOfBirth.ToShortDateString()</td>
+                    <td>@patient.PhoneNumber</td>
+                    <td>@patient.Email</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a asp-action="PatientEdit" asp-route-patientId="@patient.PatientId" class="btn btn-success btn-sm me-2">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            @* Opcional: Agregar un botón para eliminar si lo necesitas *@
+                            @* <a asp-action="PatientDelete" asp-route-patientId="@patient.PatientId" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </a> *@
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

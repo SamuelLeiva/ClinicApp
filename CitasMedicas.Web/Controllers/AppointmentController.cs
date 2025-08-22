@@ -1,4 +1,5 @@
-﻿using CitasMedicas.Web.Models.Dto;
+﻿using CitasMedicas.Web.Models;
+using CitasMedicas.Web.Models.Dto;
 using CitasMedicas.Web.Services;
 using CitasMedicas.Web.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
@@ -22,19 +23,46 @@ namespace CitasMedicas.Web.Controllers
 
         public async Task<IActionResult> AppointmentIndex()
         {
-            List<AppointmentDto>? appointmentList = new();
-            ResponseDto? responseDto = await _appointmentService.GetAppointmentsAsync();
+            // 1. Obtener los datos de la API
+            ResponseDto? appointmentsResponse = await _appointmentService.GetAppointmentsAsync();
+            ResponseDto? patientsResponse = await _patientService.GetPatientsAsync();
+            ResponseDto? doctorsResponse = await _doctorService.GetDoctorsAsync();
 
-            if (responseDto != null && responseDto.IsSuccess)
+            // 2. Manejar posibles errores
+            if (appointmentsResponse == null || !appointmentsResponse.IsSuccess ||
+                patientsResponse == null || !patientsResponse.IsSuccess ||
+                doctorsResponse == null || !doctorsResponse.IsSuccess)
             {
-                appointmentList = JsonConvert.DeserializeObject<List<AppointmentDto>>(Convert.ToString(responseDto.Result));
-            }
-            else
-            {
-                TempData["error"] = responseDto?.Message ?? "Error al obtener las citas.";
+                TempData["error"] = "Error al obtener los datos para las citas.";
+                return View(new List<AppointmentViewModel>());
             }
 
-            return View(appointmentList);
+            // 3. Deserializar los datos
+            var appointmentListDto = JsonConvert.DeserializeObject<List<AppointmentDto>>(Convert.ToString(appointmentsResponse.Result));
+            var patientList = JsonConvert.DeserializeObject<List<PatientDto>>(Convert.ToString(patientsResponse.Result));
+            var doctorList = JsonConvert.DeserializeObject<List<DoctorDto>>(Convert.ToString(doctorsResponse.Result));
+
+            // 4. Crear el ViewModel
+            var appointmentViewModelList = new List<AppointmentViewModel>();
+
+            // 5. Unir los datos (Join)
+            foreach (var appointmentDto in appointmentListDto)
+            {
+                var patient = patientList.FirstOrDefault(p => p.PatientId == appointmentDto.PatientId);
+                var doctor = doctorList.FirstOrDefault(d => d.DoctorId == appointmentDto.DoctorId);
+
+                appointmentViewModelList.Add(new AppointmentViewModel
+                {
+                    AppointmentId = appointmentDto.AppointmentId,
+                    AppointmentDate = appointmentDto.AppointmentDate,
+                    Description = appointmentDto.Description,
+                    PatientName = $"{patient?.Name} {patient?.LastName}",
+                    DoctorName = $"{doctor?.Name} {doctor?.LastName}"
+                });
+            }
+
+            // 6. Pasar el ViewModel a la vista
+            return View(appointmentViewModelList);
         }
 
         #region Appointment Details

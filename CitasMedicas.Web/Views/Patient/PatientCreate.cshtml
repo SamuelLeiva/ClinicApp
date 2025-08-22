@@ -1,0 +1,55 @@
+﻿@model CitasMedicas.Web.Models.Dto.CreatePatientDto
+
+@{
+    ViewData["Title"] = "Crear Paciente";
+}
+
+<h1 class="text-center my-4">Crear Nuevo Paciente</h1>
+
+<form asp-action="PatientCreate" method="post">
+    <div class="container border p-3">
+        <div class="row pb-2">
+            <h2 class="text-primary">Crear Paciente</h2>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DateOfBirth" class="form-label"></label>
+            <input asp-for="DateOfBirth" type="date" class="form-control" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <a asp-action="PatientIndex" class="btn btn-secondary form-control">Volver a la lista</a>
+            </div>
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary form-control">Crear</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,60 @@
+﻿@model List<CitasMedicas.Web.Models.Dto.SpecialtyDto>
+
+@{
+    ViewData["Title"] = "Especialidades";
+}
+
+<h1 class="text-center my-4">Listado de Especialidades</h1>
+
+<div class="container">
+    @if (TempData["success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">Especialidades</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-action="SpecialtyCreate" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Nueva Especialidad</a>
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr class="table-dark">
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @foreach (var specialty in Model)
+                {
+                    <tr>
+                        <td>@specialty.Name</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="SpecialtyEdit" asp-route-specialtyId="@specialty.SpecialtyId" class="btn btn-success btn-sm me-2">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

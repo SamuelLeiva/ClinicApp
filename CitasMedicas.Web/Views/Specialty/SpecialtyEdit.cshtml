@@ -1,0 +1,36 @@
+﻿@model CitasMedicas.Web.Models.Dto.UpdateSpecialtyDto
+
+@{
+    ViewData["Title"] = "Editar Especialidad";
+}
+
+<h1 class="text-center my-4">Editar Especialidad</h1>
+
+<form asp-action="SpecialtyEdit" method="post">
+    <div class="container border p-3">
+        <div class="row pb-2">
+            <h2 class="text-primary">Editar Especialidad</h2>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="SpecialtyId" hidden />
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <a asp-action="SpecialtyIndex" class="btn btn-secondary form-control">Volver a la lista</a>
+            </div>
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary form-control">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
