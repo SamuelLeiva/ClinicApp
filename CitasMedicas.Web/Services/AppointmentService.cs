@@ -1,4 +1,5 @@
-﻿using CitasMedicas.Web.Models.Dto;
+﻿using CitasMedicas.Web.Models;
+using CitasMedicas.Web.Models.Appointment;
 using CitasMedicas.Web.Services.IServices;
 using CitasMedicas.Web.Utility;
 

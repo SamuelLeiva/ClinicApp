@@ -1,9 +1,12 @@
-﻿@model CitasMedicas.Web.Models.Dto.CreateAppointmentDto
+﻿@using CitasMedicas.Web.Models.Doctor
+@using CitasMedicas.Web.Models.Appointment
+@using CitasMedicas.Web.Models.Patient
+@model CreateAppointmentDto
 
 @{
     ViewData["Title"] = "Agendar Cita";
-    var patients = ViewBag.Patients as List<CitasMedicas.Web.Models.Dto.PatientDto>;
-    var doctors = ViewBag.Doctors as List<CitasMedicas.Web.Models.Dto.DoctorDto>;
+    var patients = ViewBag.Patients as List<PatientDto>;
+    var doctors = ViewBag.Doctors as List<DoctorDto>;
 }
 
 <h1 class="text-center my-4">Agendar Nueva Cita</h1>

@@ -1,5 +1,7 @@
 ﻿using CitasMedicas.Web.Models;
-using CitasMedicas.Web.Models.Dto;
+using CitasMedicas.Web.Models.Appointment;
+using CitasMedicas.Web.Models.Doctor;
+using CitasMedicas.Web.Models.Patient;
 using CitasMedicas.Web.Services;
 using CitasMedicas.Web.Services.IServices;
 using Microsoft.AspNetCore.Authorization;

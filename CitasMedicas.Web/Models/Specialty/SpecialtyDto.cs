@@ -1,4 +1,4 @@
-﻿namespace CitasMedicas.Web.Models.Dto
+﻿namespace CitasMedicas.Web.Models.Specialty
 {
     public class SpecialtyDto
     {

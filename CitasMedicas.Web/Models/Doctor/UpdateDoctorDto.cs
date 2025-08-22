@@ -1,12 +1,12 @@
-﻿namespace CitasMedicas.Web.Models.Dto
+﻿namespace CitasMedicas.Web.Models.Doctor
 {
-    public class UpdatePatientDto
+    public class UpdateDoctorDto
     {
-        public int? PatientId { get; set; }
+        public int? DoctorId { get; set; }
         public string? Name { get; set; }
         public string? LastName { get; set; }
-        public DateTime? DateOfBirth { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
+        public int? SpecialtyId { get; set; }
     }
 }

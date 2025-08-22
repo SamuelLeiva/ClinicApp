@@ -1,4 +1,5 @@
-﻿using CitasMedicas.Web.Models.Dto;
+﻿using CitasMedicas.Web.Models;
+using CitasMedicas.Web.Models.Specialty;
 using CitasMedicas.Web.Services.IServices;
 using CitasMedicas.Web.Utility;
 

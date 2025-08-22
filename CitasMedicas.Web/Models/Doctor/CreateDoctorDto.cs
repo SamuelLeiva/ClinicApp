@@ -1,4 +1,4 @@
-﻿namespace CitasMedicas.Web.Models.Dto
+﻿namespace CitasMedicas.Web.Models.Doctor
 {
     public class CreateDoctorDto
     {

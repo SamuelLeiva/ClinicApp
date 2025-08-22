@@ -1,8 +1,7 @@
-﻿namespace CitasMedicas.Web.Models.Dto
+﻿namespace CitasMedicas.Web.Models.Patient
 {
-    public class PatientDto
+    public class CreatePatientDto
     {
-        public int PatientId { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }

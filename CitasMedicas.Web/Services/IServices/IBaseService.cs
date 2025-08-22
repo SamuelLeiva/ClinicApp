@@ -1,4 +1,4 @@
-﻿using CitasMedicas.Web.Models.Dto;
+﻿using CitasMedicas.Web.Models;
 
 namespace CitasMedicas.Web.Services.IServices
 {

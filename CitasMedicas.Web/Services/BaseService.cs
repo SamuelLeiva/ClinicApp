@@ -1,4 +1,4 @@
-﻿using CitasMedicas.Web.Models.Dto;
+﻿using CitasMedicas.Web.Models;
 using CitasMedicas.Web.Services.IServices;
 using Newtonsoft.Json;
 using System.Net;
