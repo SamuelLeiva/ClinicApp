@@ -14,10 +14,9 @@ ClinicApp is a microservices-based application designed to manage appointments i
 
 - **C#**
 - **ASP.NET Core**
-- **HTML, CSS, JavaScript**
+- **Razor Pages**
 - **JWT (JSON Web Tokens)**
 - **Entity Framework Core**
-- **Docker** (optional, for containerized deployment)
 
 ## Getting Started
 
@@ -25,9 +24,7 @@ ClinicApp is a microservices-based application designed to manage appointments i
 
 - [.NET 6 SDK or later](https://dotnet.microsoft.com/download)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server) or another supported database
-- [Docker](https://www.docker.com/) (optional, for containerized microservices)
-- [Node.js and npm](https://nodejs.org/) (optional, for frontend development)
-
+- 
 ### Setup
 
 1. **Clone the repository**
@@ -55,11 +52,6 @@ ClinicApp is a microservices-based application designed to manage appointments i
     dotnet run --project <MicroserviceProjectName>
     ```
 
-    Or use Docker Compose (if available):
-
-    ```bash
-    docker-compose up
-    ```
 
 ### Usage
 
@@ -79,9 +71,6 @@ ClinicApp is a microservices-based application designed to manage appointments i
 - Role-based access control for sensitive operations.
 - Secure storage and transmission of sensitive data.
 
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
 
 ## License
 
